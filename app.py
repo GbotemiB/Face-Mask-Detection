@@ -9,7 +9,7 @@ from tensorflow.keras.models import load_model
 import detect_mask_image
 
 # Setting custom Page Title and Icon with changed layout and sidebar state
-st.beta_set_page_config(page_title='Face Mask Detector', page_icon='😷', layout='centered', initial_sidebar_state='expanded')
+st.set_page_config(page_title='Face Mask Detector', page_icon='😷', layout='centered', initial_sidebar_state='expanded')
 
 
 def local_css(file_name):
@@ -17,7 +17,7 @@ def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-
+RGB_img = None
 def mask_image():
     global RGB_img
     # load our serialized face detector model from disk
@@ -91,9 +91,10 @@ def mask_image():
                         cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
             cv2.rectangle(image, (startX, startY), (endX, endY), color, 2)
             RGB_img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-mask_image()
+
 
 def mask_detection():
+    
     local_css("css/styles.css")
     st.markdown('<h1 align="center">😷 Face Mask Detection</h1>', unsafe_allow_html=True)
     activities = ["Image", "Webcam"]
@@ -109,6 +110,7 @@ def mask_detection():
             our_image = Image.open(image_file)  # making compatible to PIL
             im = our_image.save('./images/out.jpg')
             saved_image = st.image(image_file, caption='', use_column_width=True)
+            
             st.markdown('<h3 align="center">Image uploaded successfully!</h3>', unsafe_allow_html=True)
             if st.button('Process'):
                 st.image(RGB_img, use_column_width=True)
@@ -116,4 +118,7 @@ def mask_detection():
     if choice == 'Webcam':
         st.markdown('<h2 align="center">Detection on Webcam</h2>', unsafe_allow_html=True)
         st.markdown('<h3 align="center">This feature will be available soon!</h3>', unsafe_allow_html=True)
+
+
+mask_image()
 mask_detection()

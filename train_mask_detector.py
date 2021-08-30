@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 import os
+import pickle
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -38,7 +39,8 @@ args = vars(ap.parse_args())
 # initialize the initial learning rate, number of epochs to train for,
 # and batch size
 INIT_LR = 1e-4
-EPOCHS = 20
+
+EPOCHS = 5 #adjusted epoch len from 20 to 5
 BS = 32
 
 # grab the list of images in our dataset directory, then initialize
@@ -138,7 +140,11 @@ print(classification_report(testY.argmax(axis=1), predIdxs,
 
 # serialize the model to disk
 print("[INFO] saving mask detector model...")
+
+pickle.dump(reg,open('new_model.pkl','wb'))
+
 model.save(args["model"], save_format="h5")
+print("Model has been saved")
 
 # plot the training loss and accuracy
 N = EPOCHS
